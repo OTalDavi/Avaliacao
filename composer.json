@@ -1,0 +1,9 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
+    },
+    "require": {
+        "slim/psr7": "^1.8",
+        "slim/slim": "^4.15"
+    }
+}
