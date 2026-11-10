@@ -9,22 +9,19 @@ $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 
 $Despesas = [
-    ['id' => 1, 'nome' => 'Comida', 'preco' => 10.00],
-    ['id' => 2, 'nome' => 'Lazer', 'preco' => 20.00],
-    ['id' => 3, 'nome' => 'Manutenção', 'preco' => 30.00],
-    ['id' => 4, 'nome' => 'Transporte', 'preco' => 40.00],
-    ['id' => 5, 'nome' => 'Saúde', 'preco' => 50.00],
-    ['id' => 6, 'nome' => 'Educação', 'preco' => 60.00],
-    ['id' => 7, 'nome' => 'Moradia', 'preco' => 70.00],
-    ['id' => 8, 'nome' => 'Vestuário', 'preco' => 80.00],
-    ['id' => 9, 'nome' => 'Impostos', 'preco' => 90.00],
-    ['id' => 10, 'nome' => 'Investimentos', 'preco' => 100.00]
-];
-
-$receita = [
-    ['id' => 1, 'nome' => 'Trabalho', 'Lucro' => 1700.00],
-    ['id' => 2, 'nome' => 'Freelance', 'Lucro' => 200.00],
-    ['id' => 3, 'nome' => 'Investimentos', 'Lucro' => 1200.00]
+    ['id' => 1, 'nome' => 'Comida', 'valor' => 10.00, 'data' => '2024-06-01', 'tipo' => 'Despesa'],
+    ['id' => 2, 'nome' => 'Lazer', 'valor' => 20.00, 'data' => '2024-06-02', 'tipo' => 'Despesa'],
+    ['id' => 3, 'nome' => 'Manutenção', 'valor' => 30.00, 'data' => '2024-06-03', 'tipo' => 'Despesa'],
+    ['id' => 4, 'nome' => 'Transporte', 'valor' => 40.00, 'data' => '2024-06-04', 'tipo' => 'Despesa'],
+    ['id' => 5, 'nome' => 'Saúde', 'valor' => 50.00, 'data' => '2024-06-05', 'tipo' => 'Despesa'],
+    ['id' => 6, 'nome' => 'Educação', 'valor' => 60.00, 'data' => '2024-06-06', 'tipo' => 'Despesa'],
+    ['id' => 7, 'nome' => 'Moradia', 'valor' => 70.00, 'data' => '2024-06-07', 'tipo' => 'Despesa'],
+    ['id' => 8, 'nome' => 'Vestuário', 'valor' => 80.00, 'data' => '2024-06-08', 'tipo' => 'Despesa'],
+    ['id' => 9, 'nome' => 'Impostos', 'valor' => 90.00, 'data' => '2024-06-09', 'tipo' => 'Despesa'],
+    ['id' => 10, 'nome' => 'Investimentos', 'valor' => 100.00, 'data' => '2024-06-10', 'tipo' => 'Despesa'],
+    ['id' => 11, 'nome' => 'Trabalho', 'valor' => 1700.00, 'data' => '2024-06-11', 'tipo' => 'Receita'],
+    ['id' => 12, 'nome' => 'Freelance', 'valor' => 200.00, 'data' => '2024-06-12', 'tipo' => 'Receita'],
+    ['id' => 13, 'nome' => 'InvestimentosRetorno', 'valor' => 1200.00, 'data' => '2024-06-13', 'tipo' => 'Receita']
 ];
 
 $app->get('/status', function ($request, $response) { 
@@ -70,116 +67,72 @@ $app->get('/categorias/xml', function ($request, $response) {
 $app->get('/categorias/plain', function ($request, $response) { 
     $response->getBody()->write("Comida, Lazer, Manutenção, Transporte, Saúde, Educação, Moradia, Vestuário, Impostos, Investimentos"); 
     return $response->withHeader('Content-Type', 'text/plain')->withStatus(200); 
-}); 
-
-$app->get('/categoriareceita', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['categoriareceita' => '[Trabalho, Freelance, Investimentos]'])); 
-    return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
-}); 
-
-$app->get('/categoriareceita/xml', function ($request, $response) { 
-    $response->getBody()->write("<categoriareceita><categoria>Trabalho</categoria><categoria>Freelance</categoria><categoria>Investimentos</categoria></categoriareceita>"); 
-    return $response->withHeader('Content-Type', 'application/xml')->withStatus(200); 
-}); 
-
-$app->get('/categoriareceita/plain', function ($request, $response) { 
-    $response->getBody()->write("Trabalho, Freelance, Investimentos"); 
-    return $response->withHeader('Content-Type', 'text/plain')->withStatus(200); 
-}); 
+});
 
 $app->get('/categoria/Comida', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Comida' => '[id: 1, nome: Comida, preco: 10.00]'])); 
+    $response->getBody()->write(json_encode(['Comida' => '[id: 1, nome: Comida, valor: 10.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Lazer', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Lazer' => '[id: 2, nome: Lazer, preco: 20.00]'])); 
+    $response->getBody()->write(json_encode(['Lazer' => '[id: 2, nome: Lazer, valor: 20.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Manutenção', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Manutenção' => '[id: 3, nome: Manutenção, preco: 30.00]'])); 
+    $response->getBody()->write(json_encode(['Manutenção' => '[id: 3, nome: Manutenção, valor: 30.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Transporte', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Transporte' => '[id: 4, nome: Transporte, preco: 40.00]'])); 
+    $response->getBody()->write(json_encode(['Transporte' => '[id: 4, nome: Transporte, valor: 40.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Saúde', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Saúde' => '[id: 5, nome: Saúde, preco: 50.00]'])); 
+    $response->getBody()->write(json_encode(['Saúde' => '[id: 5, nome: Saúde, valor: 50.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Educação', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Educação' => '[id: 6, nome: Educação, preco: 60.00]'])); 
+    $response->getBody()->write(json_encode(['Educação' => '[id: 6, nome: Educação, valor: 60.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Moradia', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Moradia' => '[id: 7, nome: Moradia, preco: 70.00]'])); 
+    $response->getBody()->write(json_encode(['Moradia' => '[id: 7, nome: Moradia, valor: 70.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Vestuário', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Vestuário' => '[id: 8, nome: Vestuário, preco: 80.00]'])); 
+    $response->getBody()->write(json_encode(['Vestuário' => '[id: 8, nome: Vestuário, valor: 80.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Impostos', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Impostos' => '[id: 9, nome: Impostos, preco: 90.00]'])); 
+    $response->getBody()->write(json_encode(['Impostos' => '[id: 9, nome: Impostos, valor: 90.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
 $app->get('/categoria/Investimentos', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['Investimentos' => '[id: 10, nome: Investimentos, preco: 100.00]'])); 
+    $response->getBody()->write(json_encode(['Investimentos' => '[id: 10, nome: Investimentos, valor: 100.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
-$app->get('/telefone', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['telefone' => 'Trimmm-Triririm!'])); 
+$app->get('/categoria/InvestimentosRetorno', function ($request, $response) { 
+    $response->getBody()->write(json_encode(['InvestimentosRetorno' => '[id: 13, nome: InvestimentosRetorno, valor: 1200.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
 }); 
 
-$app->get('/telefone/xml', function ($request, $response) { 
-    $response->getBody()->write("<telefone>Trimmm-Triririm!</telefone>"); 
-    return $response->withHeader('Content-Type', 'application/xml')->withStatus(200); 
-}); 
 
-$app->get('/telefone/plain', function ($request, $response) { 
-    $response->getBody()->write("Trimmm-Triririm!"); 
-    return $response->withHeader('Content-Type', 'text/plain')->withStatus(200); 
-}); 
-
-$app->get('/desmotivacional', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['desmotivacional' => 'Desista, A vida é ruim'])); 
+$app->get('/categoria/Trabalho', function ($request, $response) { 
+    $response->getBody()->write(json_encode(['Trabalho' => '[id: 11, nome: Trabalho, valor: 1000.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
-}); 
+});  
 
-$app->get('/desmotivacional/xml', function ($request, $response) { 
-    $response->getBody()->write("<desmotivacional>Desista, A vida é ruim</desmotivacional>"); 
-    return $response->withHeader('Content-Type', 'application/xml')->withStatus(200); 
-}); 
-
-$app->get('/desmotivacional/plain', function ($request, $response) { 
-    $response->getBody()->write("Desista, A vida é ruim"); 
-    return $response->withHeader('Content-Type', 'text/plain')->withStatus(200); 
-}); 
-
-$app->get('/motivacional', function ($request, $response) { 
-    $response->getBody()->write(json_encode(['motivacional' => 'Viva, a vida é uma festa'])); 
+$app->get('/categoria/Freelance', function ($request, $response) { 
+    $response->getBody()->write(json_encode(['Freelance' => '[id: 12, nome: Freelance, valor: 1100.00]'])); 
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200); 
-}); 
-
-$app->get('/motivacional/xml', function ($request, $response) { 
-    $response->getBody()->write("<motivacional>Viva, a vida é uma festa</motivacional>"); 
-    return $response->withHeader('Content-Type', 'application/xml')->withStatus(200); 
-}); 
-
-$app->get('/motivacional/plain', function ($request, $response) { 
-    $response->getBody()->write("Viva, a vida é uma festa"); 
-    return $response->withHeader('Content-Type', 'text/plain')->withStatus(200); 
 }); 
 
 $app->get('/musica', function ($request, $response) { 
