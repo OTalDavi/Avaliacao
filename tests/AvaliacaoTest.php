@@ -2,7 +2,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 use Slim\Psr7\Factory\ServerRequestFactory;
-class ProdutoTest extends TestCase
+class AvaliacaoTest extends TestCase
 {
 public function testPostCriaProduto(): void
 {
