@@ -1,12 +1,18 @@
 <?php
 
+// Carrega as dependências do Composer, incluindo o Slim Framework.
 require __DIR__ . '/../vendor/autoload.php';
 
 use Slim\Factory\AppFactory;
 
+// Cria a instância da aplicação Slim.
 $app = AppFactory::create();
+
+// Permite que a API leia JSON no corpo das requisições POST e PUT.
 $app->addBodyParsingMiddleware();
 
+// Dados em memória usados para simular um banco de dados.
+// O projeto mantém categorias e lançamentos em arrays enquanto a aplicação estiver em execução.
 $Categorias = [
     ['id' => 1, 'nome' => 'Comida', 'tipo' => 'despesa'],
     ['id' => 2, 'nome' => 'Lazer', 'tipo' => 'despesa'],
@@ -23,6 +29,7 @@ $Categorias = [
     ['id' => 13, 'nome' => 'InvestimentosRetorno', 'tipo' => 'receita']
 ];
 
+// Lista inicial de lançamentos financeiros, representando receitas e despesas do mês.
 $Lancamentos = [
     ['id' => 1, 'descricao' => 'Comida', 'valor' => 10.00, 'data' => '2024-06-01', 'tipo' => 'despesa', 'categoria_id' => 1],
     ['id' => 2, 'descricao' => 'Lazer', 'valor' => 20.00, 'data' => '2024-06-02', 'tipo' => 'despesa', 'categoria_id' => 2],
@@ -39,6 +46,7 @@ $Lancamentos = [
     ['id' => 13, 'descricao' => 'Retorno de investimentos', 'valor' => 1200.00, 'data' => '2024-06-13', 'tipo' => 'receita', 'categoria_id' => 13]
 ];
 
+// Rotas simples para verificar se a API está funcionando e responder com dados básicos.
 $app->get('/status', function ($request, $response) {
     $response->getBody()->write(json_encode(['status' => 'ok']));
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
@@ -60,6 +68,7 @@ $app->get('/tic', function ($request, $response) {
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 });
 
+// Rotas relacionadas às categorias financeiras.
 $app->get('/categorias', function ($request, $response) use (&$Categorias) {
     $response->getBody()->write(json_encode(['categorias' => $Categorias], JSON_UNESCAPED_UNICODE));
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
@@ -77,6 +86,7 @@ $app->get('/categorias/{id}', function ($request, $response, $args) use (&$Categ
     return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 });
 
+// Cria uma nova categoria, validando nome e tipo antes de salvar.
 $app->post('/categorias', function ($request, $response) use (&$Categorias) {
     $dados = (array) $request->getParsedBody();
     $nome = trim($dados['nome'] ?? '');
@@ -99,6 +109,7 @@ $app->post('/categorias', function ($request, $response) use (&$Categorias) {
     return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
 });
 
+// Atualiza uma categoria existente, sem permitir conflitos de nome ou mudança de tipo vinculada.
 $app->put('/categorias/{id}', function ($request, $response, $args) use (&$Categorias, &$Lancamentos) {
     $id = (int) $args['id'];
     $dados = (array) $request->getParsedBody();
@@ -132,6 +143,7 @@ $app->put('/categorias/{id}', function ($request, $response, $args) use (&$Categ
     return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 });
 
+// Remove uma categoria somente se ela não estiver sendo usada por nenhum lançamento.
 $app->delete('/categorias/{id}', function ($request, $response, $args) use (&$Categorias, &$Lancamentos) {
     $id = (int) $args['id'];
     foreach ($Categorias as $indice => $categoria) {
@@ -151,6 +163,7 @@ $app->delete('/categorias/{id}', function ($request, $response, $args) use (&$Ca
     return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 });
 
+// Rotas relacionadas aos lançamentos financeiros, incluindo filtros por data, categoria e tipo.
 $app->get('/lancamentos', function ($request, $response) use (&$Lancamentos) {
     $resultado = $Lancamentos;
     $filtros = $request->getQueryParams();
@@ -184,6 +197,7 @@ $app->get('/lancamentos/{id}', function ($request, $response, $args) use (&$Lanc
     return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 });
 
+// Cria um novo lançamento financeiro, validando valores, data e categoria.
 $app->post('/lancamentos', function ($request, $response) use (&$Lancamentos, &$Categorias) {
     $dados = (array) $request->getParsedBody();
     $descricao = trim($dados['descricao'] ?? '');
@@ -216,6 +230,7 @@ $app->post('/lancamentos', function ($request, $response) use (&$Lancamentos, &$
     return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
 });
 
+// Atualiza um lançamento existente com validação dos campos e consistência com a categoria informada.
 $app->put('/lancamentos/{id}', function ($request, $response, $args) use (&$Lancamentos, &$Categorias) {
     $id = (int) $args['id'];
     $dados = (array) $request->getParsedBody();
@@ -252,6 +267,7 @@ $app->put('/lancamentos/{id}', function ($request, $response, $args) use (&$Lanc
     return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 });
 
+// Exclui um lançamento pelo ID e informa o resultado em JSON.
 $app->delete('/lancamentos/{id}', function ($request, $response, $args) use (&$Lancamentos) {
     $id = (int) $args['id'];
     foreach ($Lancamentos as $indice => $lancamento) {
@@ -265,6 +281,7 @@ $app->delete('/lancamentos/{id}', function ($request, $response, $args) use (&$L
     return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 });
 
+// Calcula o saldo geral somando receitas e despesas existentes no sistema.
 $app->get('/resumo/saldo', function ($request, $response) use (&$Lancamentos) {
     $receitas = 0;
     $despesas = 0;
@@ -276,6 +293,7 @@ $app->get('/resumo/saldo', function ($request, $response) use (&$Lancamentos) {
     return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 });
 
+// Gera um resumo financeiro por intervalo de datas, validadando se o período é consistente.
 $app->get('/resumo/periodo', function ($request, $response) use (&$Lancamentos) {
     $filtros = $request->getQueryParams();
     $inicio = $filtros['data_inicio'] ?? '';
@@ -300,376 +318,3 @@ $app->get('/resumo/periodo', function ($request, $response) use (&$Lancamentos) 
 });
 
 return $app;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
