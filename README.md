@@ -25,9 +25,13 @@ Para instalar as dependências deste projeto, você deve entrar no terminal do V
 ```bash
 composer install
 ```
+Para baixar os pacotes necessarios, você deve entrar no terminal do vscode e digitar:
+```bash
+composer require --dev phpunit/phpunit
 
+
+```
 Para executar este projeto, você deve entrar no terminal e digitar:
-
 ```bash
 php -S localhost:8080 -t public
 ```
