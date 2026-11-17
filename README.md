@@ -17,7 +17,7 @@ Foram utilizadas as tecnologias:
 Para clonar esse projeto, você deve entrar no aplicativo Windows PowerShell e digitar:
 
 ```bash
-git clone https://github.com/OTalDavi/AtividadeAvaliativa.git
+git clone https://github.com/OTalDavi/Avaliacao.git
 ```
 
 Para instalar as dependências deste projeto, você deve entrar no terminal do VSCode ou Windows PowerShell e digitar:
